@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { Router } from 'express';
 import {
   audioQuerySchema,
+  audioSearchQuerySchema,
   createClipSchema,
   isAllowedAudioMime,
   updateTranscriptSchema,
@@ -27,6 +28,7 @@ import { logActivity } from '../services/activity';
 import { buildAudioKey, extensionForMime, storage } from '../services/storage';
 import { transcriptionProvider } from '../services/transcription';
 import { toAudioDto, toClipDto } from '../services/serialize';
+import { searchAudio } from '../services/search';
 import { emitToWorkspace } from '../realtime/hub';
 
 export const audioRouter: Router = Router();
@@ -150,6 +152,34 @@ audioRouter.get(
     });
 
     send(res, audios.map(toAudioDto));
+  }),
+);
+
+/* ------------------------------------------------------------------ */
+/* 关键词检索：搜"糖"定位到全部语音里的相关片段                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * 跨全部语音内容的关键词检索。
+ *
+ * 必须注册在 GET /audio/:audioId 之前，否则 "search" 会被当成 audioId。
+ * 检索范围是空间内全部语音的转写正文与人工框选片段的标签，
+ * 服务端按匹配程度打分排序，返回可直接定位回放的片段。
+ */
+audioRouter.get(
+  '/audio/search',
+  validateQuery(audioSearchQuerySchema),
+  asyncHandler(async (req, res) => {
+    const { workspaceId, q, recipeId, kind, includeDeleted } = queryOf(req, audioSearchQuerySchema);
+    const result = await searchAudio({
+      userId: req.auth!.userId,
+      workspaceId,
+      q,
+      recipeId,
+      kind,
+      includeDeleted,
+    });
+    send(res, result);
   }),
 );
 

@@ -347,6 +347,20 @@ export const audioQuerySchema = z.object({
   includeDeleted: booleanQuerySchema,
 });
 
+/**
+ * 语音内容关键词检索的查询参数。
+ * 必须指定空间（检索的隔离边界与音频列表一致），食谱可选（用于在单张食谱内收窄）。
+ */
+export const audioSearchQuerySchema = z.object({
+  workspaceId: idSchema,
+  q: z.string().trim().min(1, '请输入要检索的关键词').max(200),
+  recipeId: idSchema.optional(),
+  kind: z.enum(AUDIO_KINDS).optional(),
+  // 默认连"已从语音列表移除但文件仍保留"的软删除音频一起搜：
+  // 证据永久保留，检索也不应该把它们弄丢
+  includeDeleted: booleanQuerySchema.transform((value) => value ?? true),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;

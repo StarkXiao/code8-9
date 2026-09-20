@@ -4,6 +4,7 @@ import {
   BellOutlined,
   HistoryOutlined,
   LogoutOutlined,
+  SearchOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -48,6 +49,9 @@ export function AppLayout() {
           <nav className="froa-nav">
             <NavLink to={base} end>
               食谱
+            </NavLink>
+            <NavLink to={`${base}/search`}>
+              <SearchOutlined /> 语音检索
             </NavLink>
             <NavLink to={`${base}/members`}>成员</NavLink>
             <NavLink to={`${base}/notifications`}>通知</NavLink>

@@ -325,3 +325,54 @@ export interface VersionDiffDto {
   entries: DiffEntry[];
   summary: { added: number; removed: number; modified: number; moved: number };
 }
+
+/* ------------------------------------------------------------------ */
+/* 语音关键词检索                                                       */
+/* ------------------------------------------------------------------ */
+
+/** 摘要里的一段命中区间（字符偏移基于 snippet 自身文本，前端直接切片高亮） */
+export interface AudioSearchSnippet {
+  /** 摘要文本（已带上下文） */
+  text: string;
+  /** 命中区间，相对 text 的偏移 */
+  matched: Array<{ start: number; end: number }>;
+  /**
+   * 这段摘要在整段音频里的近似位置（毫秒）。
+   * 转写没有逐字时间轴时，用"字符偏移 / 总字数 × 音频时长"估算，
+   * 仅用于点击后跳到那句话附近 —— 精确回放请用 clip。
+   */
+  approxStartMs: number | null;
+  approxEndMs: number | null;
+  /** 命中位置落在哪个已框选片段内（若有）；点它可以精确回放 */
+  clipId: string | null;
+}
+
+/** 一条语音的检索结果（同一音频的多处命中聚合在一条里） */
+export interface AudioSearchResultDto {
+  audio: AudioAttachmentDto;
+  recipe: { id: string; title: string };
+  /** 相关度分数，越大越匹配；结果整体按它从高到低排列 */
+  score: number;
+  /** 命中次数（转写 + 片段标签合计） */
+  hitCount: number;
+  /** 命中了几个不同的查询词 */
+  matchedTerms: string[];
+  /** 转写正文里的命中摘要 */
+  transcriptSnippets: AudioSearchSnippet[];
+  /** 片段标签上的命中 */
+  clipLabelHits: Array<{
+    clipId: string;
+    label: string;
+    matched: Array<{ start: number; end: number }>;
+    startMs: number;
+    endMs: number;
+  }>;
+}
+
+export interface AudioSearchResponse {
+  query: string;
+  terms: string[];
+  results: AudioSearchResultDto[];
+  /** 扫描了多少条语音（用于"在 N 条语音中检索"的提示） */
+  scanned: number;
+}

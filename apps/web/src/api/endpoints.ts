@@ -2,6 +2,7 @@ import type {
   ActivityLogDto,
   AudioAttachmentDto,
   AudioClipDto,
+  AudioSearchResponse,
   AuthTokens,
   CommentDto,
   CommentTargetType,
@@ -183,6 +184,14 @@ export const audioApi = {
     unwrap<AudioAttachmentDto>(api.patch(`/audio/${audioId}/transcript`, { transcript, transcriptStatus })),
   createClip: (audioId: string, input: { startMs: number; endMs: number; label?: string | null }) =>
     unwrap<AudioClipDto>(api.post(`/audio/${audioId}/clips`, input)),
+  /** 在空间内全部语音（转写 + 片段标签）中检索关键词，结果按匹配程度排序 */
+  search: (params: {
+    workspaceId: string;
+    q: string;
+    recipeId?: string;
+    kind?: string;
+    includeDeleted?: boolean;
+  }) => unwrap<AudioSearchResponse>(api.get('/audio/search', { params })),
   remove: (audioId: string) => unwrap<{ removed: string }>(api.delete(`/audio/${audioId}`)),
   /** <audio> 标签无法自定义请求头，因此通过查询参数携带令牌 */
   streamUrl: (audioId: string, accessToken: string | null) =>

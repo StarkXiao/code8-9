@@ -472,3 +472,58 @@ a {
 body.has-player .froa-main {
   padding-bottom: 6rem;
 }
+
+/* ---------------- 语音检索 ---------------- */
+
+.froa-search-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0.5rem;
+  z-index: 5;
+}
+
+.froa-search-bar .ant-input-affix-wrapper {
+  flex: 1;
+  min-width: 240px;
+}
+
+.froa-search-result {
+  padding: 0.85rem 1rem;
+}
+
+.froa-search-result-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.froa-search-recipe {
+  font-weight: 600;
+  color: var(--froa-primary);
+}
+
+.froa-search-hit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.froa-search-context {
+  line-height: 1.8;
+  color: var(--froa-text);
+  flex: 1;
+  min-width: 0;
+}
+
+.froa-search-context mark {
+  background: #ffe58f;
+  color: inherit;
+  padding: 0 0.15rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
