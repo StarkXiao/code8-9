@@ -472,3 +472,32 @@ a {
 body.has-player .froa-main {
   padding-bottom: 6rem;
 }
+
+/* ---------------- 语音检索 ---------------- */
+
+.froa-search-hit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
+  background: #f7f3ee;
+}
+
+.froa-search-hit + .froa-search-hit {
+  margin-top: 0.35rem;
+}
+
+.froa-search-hit-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--froa-text-soft);
+}
+
+.froa-search-hit-text mark {
+  background: var(--froa-primary-soft);
+  color: var(--froa-primary);
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 0 2px;
+}

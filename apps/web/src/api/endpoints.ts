@@ -2,6 +2,7 @@ import type {
   ActivityLogDto,
   AudioAttachmentDto,
   AudioClipDto,
+  AudioSearchResultDto,
   AuthTokens,
   CommentDto,
   CommentTargetType,
@@ -187,6 +188,14 @@ export const audioApi = {
   /** <audio> 标签无法自定义请求头，因此通过查询参数携带令牌 */
   streamUrl: (audioId: string, accessToken: string | null) =>
     `/api/audio/${audioId}/stream${accessToken ? `?access_token=${encodeURIComponent(accessToken)}` : ''}`,
+};
+
+/* ---------------- 语音检索 ---------------- */
+
+export const searchApi = {
+  /** 对全部语音的转写文本做关键词检索，结果按命中次数从高到低排列 */
+  audio: (params: { q: string; workspaceId?: string; recipeId?: string }) =>
+    unwrap<AudioSearchResultDto[]>(api.get('/search/audio', { params })),
 };
 
 /* ---------------- 待澄清条目 ---------------- */

@@ -187,6 +187,30 @@ export interface AudioClipDto {
   createdAt: string;
 }
 
+/** 一次关键词命中：命中词本身 + 前后上下文，前端直接做高亮展示 */
+export interface AudioSearchMatchDto {
+  /** 命中词在转写全文中的字符偏移 */
+  start: number;
+  end: number;
+  before: string;
+  match: string;
+  after: string;
+  /**
+   * 按"字符位置 / 全文长度 × 音频时长"折算的大致播放起点（毫秒）。
+   * 转写文本没有时间轴，这只是估算值；音频时长未知时为 null。
+   */
+  approxStartMs: number | null;
+}
+
+/** 一条语音的检索结果：matchCount 即匹配程度，结果按它从高到低排序 */
+export interface AudioSearchResultDto {
+  audio: AudioAttachmentDto;
+  recipe: { id: string; title: string };
+  matchCount: number;
+  /** 命中片段（按出现顺序，条数有上限；matchCount 是完整计数） */
+  matches: AudioSearchMatchDto[];
+}
+
 export interface VagueItemDto {
   id: string;
   recipeId: string;

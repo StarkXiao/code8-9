@@ -49,6 +49,7 @@ export function AppLayout() {
             <NavLink to={base} end>
               食谱
             </NavLink>
+            <NavLink to={`${base}/search`}>语音检索</NavLink>
             <NavLink to={`${base}/members`}>成员</NavLink>
             <NavLink to={`${base}/notifications`}>通知</NavLink>
             <NavLink to={`${base}/activity`}>操作日志</NavLink>

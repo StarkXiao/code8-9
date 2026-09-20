@@ -347,6 +347,17 @@ export const audioQuerySchema = z.object({
   includeDeleted: booleanQuerySchema,
 });
 
+/**
+ * 语音内容关键词检索。
+ * q 先 trim 再校验：纯空白的查询直接 400，而不是返回一堆"什么都匹配"的结果。
+ */
+export const audioSearchQuerySchema = z.object({
+  q: z.string().trim().min(1, '请输入要检索的关键词').max(100),
+  workspaceId: idSchema.optional(),
+  recipeId: idSchema.optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
